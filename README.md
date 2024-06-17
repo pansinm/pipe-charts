@@ -7,21 +7,8 @@ Generate charts from bash output.
 ```bash
 npm install -g @sinm/pipe-charts
 ```
-    
 
 ## Usage
-
-```bash
-echo -e "day1 1\nday2 4\nday3 9"
-```
-
-output:
-```
-day1 1
-day2 4
-day3 9
-```
-
 ```bash
 echo -e "day1 1\nday2 4\nday3 9" | pipe-charts --type bar
 ```
