@@ -1,0 +1,22 @@
+{
+  "name": "@sinm/pipe-charts",
+  "version": "1.0.0",
+  "description": "pipe bash output to echarts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "pipe-charts": "./src/cli.mjs"
+  },
+  "author": "pansinm <pansinm@foxmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.17.0"
+  },
+  "dependencies": {
+    "canvas": "^2.11.2",
+    "commander": "^12.1.0",
+    "echarts": "^5.5.0"
+  }
+}
