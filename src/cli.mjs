@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import os from "os";
 import path from "path";
-import { renderCharts } from "./renderer.mjs";
+import { renderCharts, renderMarkdownDiagram } from "./renderer.mjs";
 import args from "./args.mjs";
 import emitter from "./emitter.mjs";
+import { generateCode } from "./generator.mjs";
 
 const {
   width,
@@ -16,6 +17,7 @@ const {
   type,
   xType,
   yType,
+  prompt,
 } = args;
 
 function getOutputFile() {
@@ -30,11 +32,15 @@ function getOutputFile() {
 const outputFile = getOutputFile();
 
 function render(data) {
+  const splitter = args.splitter ? new RegExp(args.splitter, "g") : /[\s,]+/g;
+  data = data.map((item) => item.trim().split(splitter));
   let xIndex = x;
   if (!xIndex && data[0]?.length > 0) {
     xIndex = 0;
   }
-  const xData = data.map((item, index) => (xIndex === undefined ? index : item[xIndex]));
+  const xData = data.map((item, index) =>
+    xIndex === undefined ? index : item[xIndex]
+  );
   const types = type
     .trim()
     .split(",")
@@ -74,10 +80,27 @@ function render(data) {
   );
 }
 
-emitter.on("updated", (data) => {
-  render(data);
+emitter.on("done", async (data) => {
+  if (prompt) {
+    const { type, option, code, content } = await generateCode(
+      data.join("\n"),
+      prompt
+    );
+    if (type === "echarts") {
+      console.log("--->", outputFile, option);
+      renderCharts({ file: outputFile, width: width, height: height }, option);
+    } else if (["mermaid", "plantuml"].includes(type)) {
+      renderMarkdownDiagram(type, code, outputFile);
+    } else {
+      console.log(content);
+    }
+  } else {
+    render(data);
+  }
 });
 
 emitter.once("updated", (data) => {
-  console.log("output:\t", outputFile);
+  if (!prompt) {
+    render(data);
+  }
 });

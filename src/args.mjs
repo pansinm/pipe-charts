@@ -1,6 +1,7 @@
 import { program } from "commander";
 
 program
+  .option("-p, --prompt <prompt>", "llm prompt")
   .option("-t, --title <title>", "title")
   .option("-w, --width <width>", "canvas width", 800)
   .option("-h, --height <height>", "canvas height", 600)
@@ -16,6 +17,19 @@ program
 program.parse();
 
 /**
- * @type {{ title?: string, width?: number, height?: number, splitter?: string, darkMode?: boolean, x?: string, xType?: string, y?: string, yType?: string, type?: string, output?: string}}
+ * @type {{
+ * title?: string,
+ * width?: number,
+ * height?: number,
+ * splitter?: string,
+ * darkMode?: boolean,
+ * x?: string,
+ * xType?: string,
+ * y?: string,
+ * yType?: string,
+ * type?: string,
+ * output?: string
+ * prompt?: string
+ * }}
  */
-export default program.opts();
+export default { ...program.opts() };
